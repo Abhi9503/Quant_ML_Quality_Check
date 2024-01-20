@@ -1,0 +1,14 @@
+{
+  "name": "product_details",
+  "version": "1.0.0",
+  "description": "This app content product information",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "cd product && yarn dev",
+    "build": "cd product && yarn build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -213,3 +213,5 @@ app_license = "MIT"
 # auth_hooks = [
 # 	"product_details.auth.validate"
 # ]
+
+website_route_rules = [{'from_route': '/product/<path:app_path>', 'to_route': 'product'},]

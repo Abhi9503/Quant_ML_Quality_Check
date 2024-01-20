@@ -1,6 +1,11 @@
 // import React from "react";
 import Header from "./Header";
 const Loginpage = () => {
+//     const [showPassword, setShowPassword] = useState(false);
+
+//   const handleTogglePassword = () => {
+//     setShowPassword(!showPassword);
+//   };
     return (
         <>
         <Header/>

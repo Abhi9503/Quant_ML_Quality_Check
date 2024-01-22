@@ -1,6 +1,6 @@
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, chakra, Stack, FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
-import { useFrappeCreateDoc } from "frappe-react-sdk";
-import React from "react";
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, chakra, Stack, FormControl, FormLabel, Input, Select, Progress } from "@chakra-ui/react";
+import { useFrappeCreateDoc, useFrappeFileUpload } from "frappe-react-sdk";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form"; // Import the useForm hook
 
 type Props = {
@@ -16,17 +16,40 @@ interface FormFields {
 }
 
 export const AddProduct = ({ isOpen, onClose }: Props) => {
+
   const { register, handleSubmit, formState:{errors} } = useForm<FormFields>(); // Provide the generic type for useForm
 
   const { createDoc, loading, error } = useFrappeCreateDoc()
 
-  const onSubmit = (data: FormFields) => {
-        createDoc("Product Information",data)
-        .then(()=>{
-            onClose()
-         }
-        )
-  };
+  const [file, setFile]= useState<File | null>(null)
+
+  const { upload, progress, loading: fileUploading } = useFrappeFileUpload()
+
+
+  const onSubmit = async (data: FormFields) => {
+    try {
+        if (file) {
+            const res = await upload(file,{});
+            await createDocument(data, res.file_url);
+        } else {
+            await createDocument(data);
+        }
+    } catch (error) {
+        console.error("Error during form submission:", error);
+    }
+    };
+
+    const createDocument = async (data: FormFields, fileUrl?: string) => {
+        try {
+            await createDoc('Product Information', {
+                ...data,
+                image: fileUrl,
+            });
+            onClose();
+        } catch (error) {
+            console.error("Error creating document:", error);
+        }
+    };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -56,6 +79,15 @@ export const AddProduct = ({ isOpen, onClose }: Props) => {
                         <option value="In-Active">In-Active</option>
                     </Select>
                  </FormControl>
+                 <FormControl>
+                    <FormLabel>Product Image</FormLabel>
+                    <Input type='file' onChange={(e) => {
+                        if (e.target.files) {
+                            setFile(e.target.files[0])
+                        }
+                    }} />
+                </FormControl>
+                {fileUploading && <Progress value={progress} />}
             </Stack>
         </ModalBody>
         <ModalFooter>

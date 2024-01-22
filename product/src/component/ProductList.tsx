@@ -2,17 +2,19 @@ import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Center, HS
 import { useFrappeDocTypeEventListener, useFrappeGetDocList } from "frappe-react-sdk"
 import Header from "./Header"
 import { AddProduct } from "./AddProduct"
+import { Link } from "react-router-dom"
 
 interface ProductList{
     name:string,
     product_name:string,
     product_group:string,
     status:string, 
+    image:String
 }
 
 export const ProductList=()=>
 {
-    const {data, isLoading,error,mutate}= useFrappeGetDocList<ProductList>('Product Information',{fields:["name","product_name","product_group","status"]})
+    const {data, isLoading,error,mutate}= useFrappeGetDocList<ProductList>('Product Information',{fields:["name","product_name","product_group","status","image"]})
     const {isOpen,onOpen,onClose}= useDisclosure()  
     useFrappeDocTypeEventListener('Product Information', async (d) => {
         if (d.doctype === "Product Information") {
@@ -45,6 +47,7 @@ export const ProductList=()=>
                             <Th>Product Name</Th>
                             <Th>Product Group</Th>
                             <Th>Status</Th>
+                            <Th>File</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -60,6 +63,13 @@ export const ProductList=()=>
                                 </Td>
                                 <Td>
                                     {d.status}
+                                </Td>
+                                <Td>
+                                    {d.image && (
+                                        <Link isExternal href={d.image}>
+                                        Download
+                                        </Link>
+                                    )}
                                 </Td>
                             </Tr>)}
                     </Tbody>

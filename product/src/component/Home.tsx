@@ -1,25 +1,94 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 // import Header from "./Header";
 import "tailwindcss/tailwind.css"; 
 import upload from "./../assets/upload.png";
 import train from "./../assets/Train.png";
 import Predict from "./../assets/Predict.png";
 import Header from "./Header";
+import Automobile from "./../assets/Automobile.jpg";
+import Casting from "./../assets/casting.jpg";
+import Food from "./../assets/tamato.jpg";
+import Electronics from "./../assets/PCB.jpg";
+import Packaging from "./../assets/packaging.jpg"
+// import { useFrappeAuth } from "frappe-react-sdk";
 const Home = () => {
+    const items = [
+        { text: "Automobile", image: Automobile},
+        { text: "Casting", image:Casting},
+        { text: "Food and Beverages", image:  Food},
+        { text: "Electronics", image: Electronics },
+        { text: "Packaging", image:  Packaging}
+      ];
+    
+      const [textIndex, setTextIndex] = useState(0);
+    
+      useEffect(() => {
+        const intervalId = setInterval(() => {
+          setTextIndex((prevIndex) => (prevIndex + 1) % items.length);
+        }, 2000);
+    
+        return () => clearInterval(intervalId);
+      }, []);
     return (
         <>
         <Header/>
-            <div className=" mx-auto max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
+            <div className="mx-auto max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
                 <div className="text-center mx-auto mt-6 text-4xl ">
                     <span className="">Welcome,</span>
                     <span className="ml-2"></span>
                 </div>
-                <div className="mx-auto mt-8 h-96 w-96 border border-gray-900">
 
+                <div className=" w-auto h-2/4 md:flex mt-5">
+                    <div className=" w-auto md:w-1/2">
+                        <div className="m-5 md:m-12 w-auto text-xl md:text-3xl lg:text-5xl font-extrabold flex items-center justify-center">
+                            Quality Inspection
+                        </div>
+                        <div className="">
+                            <div className="flex text-center justify-center ">
+                                <h1 className="font-bold text-2xl sm:text-3xl md:text-5xl lg:text-7xl xl:text-9xl text-transparent bg-clip-text bg-gradient-to-br from-teal-400 to-pink-600 transition-all duration-[500ms] ease-out">
+                                {items[textIndex].text}
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex items-center justify-center w-auto md:w-1/2">
+                        <div className="flex items-center justify-center w-full">
+                            <img
+                                src={items[textIndex].image}
+                                alt={`Image for ${items[textIndex].text}`}
+                                className="w-auto md:w-auto h-40 mt-10 md:mt-0 md:h-60 lg:h-96 object-cover mx-auto rounded-3xl"
+                            />
+                        </div>
+                    </div>
                 </div>
+
+
+                 {/* <div className="border border-red-950 w-auto h-96 md:flex">
+                    <div className="border border-green-950 w-auto md:w-1/2">
+                        <div className="m-5 md:m-12 border border-green-950 w-auto text-xl md:text-5xl font-extrabold flex items-center justify-center">
+                            Quality inspection:
+                        </div>
+                        <div className="border border-yellow-400">
+                        <div className="flex text-center justify-center ">
+                            <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-transparent bg-clip-text bg-gradient-to-br from-teal-400 to-pink-600 transition-all duration-[500ms] ease-out">
+                            {items[textIndex].text}
+                            </h1>
+                        </div>
+                        </div>
+                    </div>
+                    <div className="flex items-center justify-center">
+                    <img
+                        src={items[textIndex].image}
+                        alt={`Image for ${items[textIndex].text}`}
+                        className="w-full h-full object-cover"
+                        />
+                    </div>
+                </div> */}
+
+
             </div>
-            <div className="border border-black w-full mt-10 bg-blue-100">
-                <div className="mt-9 mx-auto max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl border border-black">
+            <div className="w-full mt-20">
+                <div className="mt-9 mx-auto max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
                     <div className="mt-10 ml-10 text-4xl">Steps</div>
                     <div className="mt-5 grid  sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-4">
                         <div className="text-center text-gray-500 dark:text-gray-400">
@@ -34,7 +103,7 @@ const Home = () => {
                         </div>
                         <div className="mt-20 md:mt-0 text-center text-gray-500 dark:text-gray-400">
                             <img
-                                className=" mx-auto mb-4 w-28 h-28 rounded-full"
+                                className="mx-auto mb-4 w-28 h-28 rounded-full spin"
                                 src={train}
                                 alt="Train"
                             />
@@ -42,6 +111,7 @@ const Home = () => {
                                 Train
                             </h3>
                         </div>
+
                         <div className="mt-20 md:mt-0 text-center text-gray-500 dark:text-gray-400">
                             <img
                                 className=" mx-auto mb-4 w-28 h-28 rounded-full"

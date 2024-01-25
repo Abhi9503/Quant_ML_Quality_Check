@@ -1,3 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.cursor::after {
+    display: block;
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 100%;
+    background-color: #fff;
+    animation: cursor 0.6s linear infinite alternate;
+    will-change: opacity;
+  }
+   
+  @keyframes cursor {
+    0%,
+    40% {
+      opacity: 1;
+    }
+   
+    60%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* For CSS */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* For SCSS */
+.spin {
+  animation: spin 10s linear infinite;
+}

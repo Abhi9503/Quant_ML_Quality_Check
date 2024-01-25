@@ -10,20 +10,26 @@ import Camera from './component/Camera';
 import { MyAuthComponent } from './component/Login';
 import Uploadproduct from './component/Uploadproduct';
 import Loginpage from './component/Loginpage';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// import UseAuth from "./component/AuthContext"
 function App() {
   return (
 	<div className="App">
 	  <FrappeProvider socketPort={import.meta.env.VITE_SOCKET_PORT}>
 			<BrowserRouter basename={import.meta.env.VITE_BASE_PATH ?? ''}>
-				<Routes>
-					<Route path='/login' element={<h1>Login</h1>}/>,
-					<Route path='/' element={<Home/>}/>,
-					<Route path='/auth' element={<MyAuthComponent/>}/>,
-					<Route path='/Cheakquality' element={<Cheakquality/>}/>,
-					<Route path='/Camera' element={<Camera/>}/>
-					<Route path='/Uploadproduct' element={<Uploadproduct/>}/>,
-					<Route path='/Loginpage' element={<Loginpage/>}/>
-				</Routes>		
+				{/* <AuthProvider> */}
+				<ToastContainer position="top-right" autoClose={5000} />
+					<Routes>
+						<Route path='/login' element={<h1>Login</h1>}/>,
+						<Route path='/' element={<Home/>}/>,
+						<Route path='/auth' element={<MyAuthComponent/>}/>,
+						<Route path='/Cheakquality' element={<Cheakquality/>}/>,
+						<Route path='/Camera' element={<Camera/>}/>
+						<Route path='/Uploadproduct' element={<Uploadproduct/>}/>,
+						<Route path='/Loginpage' element={<Loginpage/>}/>
+					</Routes>		
+				{/* </AuthProvider> */}
 			</BrowserRouter>
 	  </FrappeProvider>
 	</div>

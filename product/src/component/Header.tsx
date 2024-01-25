@@ -3,7 +3,11 @@ import React, { useState } from "react";
 import "tailwindcss/tailwind.css"; 
 import { Link } from "react-router-dom";
 import erpdata from "./../assets/erpdata.png";
-import Loginpage from "./Loginpage";
+import { useFrappeAuth } from "frappe-react-sdk";
+import {Bounce, Flip, Slide, Zoom, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import UserProfileMenu from "./LogoutMenu";
+// import Loginpage from "./Loginpage";
 
 
 const Header = () => {
@@ -12,17 +16,35 @@ const Header = () => {
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
+  const { currentUser } = useFrappeAuth();
+  const { logout } = useFrappeAuth();
+
+  function showError(){
+    toast.error('Please Sign In', {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+      });
+  }
+
 
   return (
-    <header className="lg:pb-0  bg-white border border-gray-200 rounded-md shadow-md">
-      <div className="px-4 mx-auto max-w-screen-xl sm:px-6 lg:px-8">
+    <header className="lg:pb-0  bg-white border border-gray-200 rounded-md shadow-md h-36">
+      <div className="my-auto px-4 mx-auto max-w-screen-xl sm:px-6 lg:px-8">
         <nav className="flex items-center justify-between h-16 lg:h-20">
-          <div className="flex-shrink-0">
-          <img
-            className="w-28 h-10 md:w-40 md:h-14"
-            src={erpdata}
-            alt="Predict"
-          />
+          <div className="flex-shrink-0 justify-center text-center">
+            <div className="font-extrabold text-2xl">
+              QUANT INNOVATION
+            </div>
+            <div className="inline-block m-auto text-xl">
+              www.quantbit.io
+            </div>
           </div>
 
           <button
@@ -64,19 +86,47 @@ const Header = () => {
                     Home
                 </span>
             </Link>
-            <Link to="/Uploadproduct">
-                <span className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">
-                    Upload Product
-                </span>
-            </Link>
-            <Link to="/Cheakquality">
-                <span className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">
+            {currentUser ?(
+                <Link to="/Uploadproduct">
+                  <span className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">
+                      Upload Product
+                  </span>
+                </Link>
+            ):(
+              <Link to="/">
+                  <button className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
+                    onClick={showError}
+                  >
+                      Upload Product
+                  </button>
+                </Link>
+            )}
+            {currentUser ?(
+                <Link to="/Cheakquality">
+                  <span className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600">
                     Check Quality
-                </span>
-            </Link>
-            <Link to="/Loginpage">
-              <span className="inline-flex justify-center px-4 py-3 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md items-center hover:bg-blue-700 focus:bg-blue-700" role="button"> Get started now </span>
-            </Link>
+                  </span>
+                </Link>
+            ):(
+              <Link to="/">
+                  <button className="text-base font-medium text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
+                    onClick={showError}
+                  >
+                      Check Quality
+                  </button>
+                </Link>
+            )}
+             {currentUser ? (
+                        <div>
+                          <UserProfileMenu/>
+                        </div>
+                    ) : (
+                <><Link to="/Loginpage">
+                  <span className="inline-flex justify-center px-4 py-3 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md items-center hover:bg-blue-700 focus:bg-blue-700" role="button">
+                  <p>Get started now</p>
+                  </span>
+                </Link></>        
+              )}
           </div>
         </nav>
 

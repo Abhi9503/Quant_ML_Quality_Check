@@ -1,18 +1,17 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
+// import { useState } from 'react';
+// import reactLogo from './assets/react.svg';
 import { FrappeProvider } from 'frappe-react-sdk';
-import { ChakraProvider } from '@chakra-ui/react';
+// import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Product } from './pages/product';
+// import { Product } from './pages/product';
 import Home from './component/Home';
-import Cheakquality from './component/Checkquality';
+import Checkquality from './component/Checkquality';
 import Camera from './component/Camera';
-import { MyAuthComponent } from './component/Login';
 import Uploadproduct from './component/Uploadproduct';
 import Loginpage from './component/Loginpage';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import UseAuth from "./component/AuthContext"
+import Addproductdetails from './component/Addproductdetails';
 function App() {
   return (
 	<div className="App">
@@ -23,9 +22,9 @@ function App() {
 					<Routes>
 						<Route path='/login' element={<h1>Login</h1>}/>,
 						<Route path='/' element={<Home/>}/>,
-						<Route path='/auth' element={<MyAuthComponent/>}/>,
-						<Route path='/Cheakquality' element={<Cheakquality/>}/>,
+						<Route path='/Checkquality' element={<Checkquality/>}/>,
 						<Route path='/Camera' element={<Camera/>}/>
+						<Route path='/Addproductdetails' element={<Addproductdetails/>}/>,
 						<Route path='/Uploadproduct' element={<Uploadproduct/>}/>,
 						<Route path='/Loginpage' element={<Loginpage/>}/>
 					</Routes>		

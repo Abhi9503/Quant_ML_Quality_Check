@@ -1,0 +1,157 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-25 15:06:52.346350",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "product__id",
+  "date",
+  "column_break_r49dk",
+  "product_name",
+  "time",
+  "column_break_jzelz",
+  "product_group",
+  "section_break_xdpgy",
+  "product_picture",
+  "output_product_image",
+  "column_break_twbfi",
+  "product_status",
+  "section_break_xdsac",
+  "parameter_analysis",
+  "section_break_awzr2",
+  "model_name",
+  "column_break_kxpyo",
+  "computation_time",
+  "column_break_yti8i",
+  "accuracy"
+ ],
+ "fields": [
+  {
+   "fieldname": "product__id",
+   "fieldtype": "Link",
+   "label": "Product  Id",
+   "options": "Product Information"
+  },
+  {
+   "fetch_from": "product__id.product_name",
+   "fieldname": "product_name",
+   "fieldtype": "Data",
+   "label": "Product Name"
+  },
+  {
+   "fetch_from": "product__id.product_group",
+   "fieldname": "product_group",
+   "fieldtype": "Data",
+   "label": "Product Group"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "default": "Now",
+   "fieldname": "time",
+   "fieldtype": "Time",
+   "label": "Time"
+  },
+  {
+   "fieldname": "column_break_r49dk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_jzelz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_xdsac",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "parameter_analysis",
+   "fieldtype": "Table",
+   "label": "Parameter Analysis",
+   "options": "QI Parameter Analysis"
+  },
+  {
+   "fieldname": "section_break_xdpgy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "model_name",
+   "fieldtype": "Data",
+   "label": "Model Name"
+  },
+  {
+   "fieldname": "column_break_kxpyo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "computation_time",
+   "fieldtype": "Data",
+   "label": "Computation Time"
+  },
+  {
+   "fieldname": "column_break_yti8i",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "accuracy",
+   "fieldtype": "Float",
+   "label": "Accuracy",
+   "precision": "2"
+  },
+  {
+   "fieldname": "product_picture",
+   "fieldtype": "Attach",
+   "label": "Input Product Image"
+  },
+  {
+   "fieldname": "column_break_twbfi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "product_status",
+   "fieldtype": "Select",
+   "label": "Product Status",
+   "options": "Ok\nNot Ok"
+  },
+  {
+   "fieldname": "section_break_awzr2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "output_product_image",
+   "fieldtype": "Attach",
+   "label": "Output Product Image"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-01-31 12:07:17.849726",
+ "modified_by": "Administrator",
+ "module": "product_details",
+ "name": "Quality Inspection",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -15,7 +15,7 @@ interface FormFields {
   status: string;
 }
 
-export const AddProduct = ({ isOpen, onClose }: Props) => {
+ const AddProduct = ({ isOpen, onClose }: Props) => {
 
   const { register, handleSubmit, formState:{errors} } = useForm<FormFields>(); // Provide the generic type for useForm
 
@@ -103,3 +103,5 @@ export const AddProduct = ({ isOpen, onClose }: Props) => {
     </Modal>
   );
 };
+
+export default AddProduct;

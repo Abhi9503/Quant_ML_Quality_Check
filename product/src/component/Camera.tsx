@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import Header from "./Header";
-import { QualityInspection } from "../types/product_details/QualityInspection";
+// import { QualityInspection } from "../types/product_details/QualityInspection";
 import { useFrappeGetDocList } from "frappe-react-sdk";
 // import { useFrappeAuth } from "frappe-react-sdk";
 
@@ -9,23 +9,31 @@ import { useFrappeGetDocList } from "frappe-react-sdk";
 
 
 const Camera = () => {
-    const { data } = useFrappeGetDocList <QualityInspection>('Product Information', {
-        fields: ["name", "product_name", "product_group", "status", "image"]
-      });
-  
+ type QualityInspection = {
+    name: string;
+    output_product_image: string;
+    };
+
   const location = useLocation();
   const { id, name } = location.state;
-  console.log(id, name);
+//   console.log(id, name);
   // Now, you have access to id and name in the Camera component
   // Use them as needed
-  console.log("This values are from Camera File");
-  console.log(id, name);
+//   console.log("This values are from Camera File");
+//   console.log(id, name);
     
     const videoRef = useRef<HTMLVideoElement>(null);
     const photoRef = useRef<HTMLCanvasElement>(null);
     const [hasPhoto, setHasPhoto] = useState(false);
     const [hasNoCamera, setHasNoCamera] = useState(true);
-    const [previewImage, setPreviewImage] = useState(false);
+    const [previewImage, setPreviewImage] = useState('');
+    const [docName, setDocName] = useState(null);
+
+
+    const { data } = useFrappeGetDocList<QualityInspection>('Quality Inspection', {
+        filters: [["name", "=", docName]],
+        fields: ["name", "output_product_image"],
+    });
 
     const getVideo = ()=>{
         navigator.mediaDevices.enumerateDevices()
@@ -87,13 +95,17 @@ const Camera = () => {
             });
 
             if (response.status === 200) {
-                const doc_name = await response.json();
-                const { data } = await frappe.getDoc('Quality Inspection', doc_name);
-                const image_url = data.output_product_image; 
-                console.log("Done")
-            setPreviewImage(image_url);
-                // console.log(decodedImage); 
-            } else {
+                const qualitydoc = await response.json();
+                console.log(qualitydoc);
+                setDocName(qualitydoc);
+                // Update: Check if data exists and has length before accessing properties
+                if (data && data.length > 0) {
+                  setPreviewImage(data[0].output_product_image);
+                } else {
+                  console.error("Document not found in the response data.");
+                }
+              }
+            else {
                 console.log(response.status);
             }
         } catch (error) {
@@ -139,23 +151,43 @@ const Camera = () => {
                                 </button>
                             </div>
                         </div>
-                       
-                            <div className="w-full">
-                                <div className={'result' + (hasPhoto ? ' hasPhoto' : '') }>
-                                    <canvas ref={photoRef} className="rounded-3xl w-full"></canvas>
-                                    {previewImage && (<img src={`${previewImage}`} alt="Preview" /> )}
-                                </div>
-                                <div className="flex items-center justify-center mt-9">
-                                    <div className="inline-flex justify-center px-4 py-3 text-base font-semibold text-white transition-all duration-200 bg-pink-400 border border-transparent rounded-md items-center hover:bg-pink-600">
-                                        Preview
-                                    </div>
+                        <div className="w-full">
+                            <div className={'result' + (hasPhoto ? ' hasPhoto' : '') }>
+                            <canvas ref={photoRef} className="rounded-3xl w-full"></canvas>
+                            </div>
+                            <div className="flex items-center justify-center mt-9">
+                                <div className="inline-flex justify-center px-4 py-3 text-base font-semibold text-white transition-all duration-200 bg-pink-400 border border-transparent rounded-md items-center hover:bg-pink-600">
+                                    Preview
                                 </div>
                             </div>
-                       
+                        </div>
+                        <div className="border border-black ">
+                            <div >
+                                 {previewImage.trim() !== "" && (
+                                    <img  src={previewImage} alt="Product Image" />
+                                )}
+                                <div className="flex items-center justify-center mt-9">
+                                    <div className="inline-flex justify-center px-4 py-3 text-base font-semibold text-white transition-all duration-200 bg-pink-400 border border-transparent rounded-md items-center hover:bg-pink-600">
+                                        Output
+                                    </div>
+    
+                                </div>
+                            </div>
+                        </div> 
                     </div>
-                    <div className="border border-black ">
+                    <div className="border border-green-800 w-full">
+                        <div className="grid gap-6 mb-6 md:grid-cols-4">
+                            <div>
+                                <div>Product ID: {id}</div>
+                            </div>
+                            <div>
+                                {name}
+                            </div>
 
-                </div>
+                        </div>
+
+                    </div>
+                    
                 </div>
                 
                 </>
@@ -165,4 +197,3 @@ const Camera = () => {
 };
 
 export default Camera;
-

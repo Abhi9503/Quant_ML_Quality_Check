@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import Header from "./Header";
 import {useFrappeGetDocList } from "frappe-react-sdk";
 import { useNavigate } from 'react-router-dom';
-// import { MyAuthComponent } from './Login';
-// import TransitionExample from './LoginDialog';
 
 const Cheakquality = () => {
   const navigate = useNavigate();
@@ -55,8 +53,6 @@ const Cheakquality = () => {
     }
   };
 
-//   const { currentUser } = useFrappeAuth();
-
   return (
     <>
       <Header />
@@ -83,10 +79,7 @@ const Cheakquality = () => {
                                     ))
                                 }
                             </select>
-                            {/* {productGroupError && <p className="text-sm text-red-800">{productGroupError}</p>} */}
                         </div>
-                        
-
                             <div className="text-xl relative z-0  group mt-5 m-5 md:m-10">
                                 <input
                                     type="text"
@@ -101,7 +94,7 @@ const Cheakquality = () => {
                                 />
                                 <label
                                     htmlFor="product_name"
-                                    className="text-sm md:text-lg lg:text-xl  font-medium peer-focus:font-medium absolute text-pink-500 dark:text-pink-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    className="text-sm md:text-lg lg:text-xl  font-medium peer-focus:font-medium absolute text-pink-400 dark:text-pink-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                 >
                                     Product Name
                                 </label>
@@ -111,16 +104,13 @@ const Cheakquality = () => {
                                 <div className="text-red-800 font-semibold flex items-center justify-center">Please enter Product ID</div>
                             )}
                             <div className="mt-5 ml-10">
-                                {/* <Link to="/Camera"> */}
-                                    <button
-                                        type="submit"
-                                        className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded"
-                                    >
-                                        Check Quality
-                                    </button>
-                                {/* </Link> */}
+                              <button
+                                  type="submit"
+                                  className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded"
+                              >
+                                  Check Quality
+                              </button>
                             </div>
-                            
                         </form>
                     </div>
                 </div>

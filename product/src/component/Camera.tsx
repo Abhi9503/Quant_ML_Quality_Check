@@ -1,11 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import Header from "./Header";
-// import { QualityInspection } from "../types/product_details/QualityInspection";
 import { useFrappeGetDocList } from "frappe-react-sdk";
-// import { useFrappeAuth } from "frappe-react-sdk";
-
-// import { Image, Breathing } from 'react-shimmer';
 
 
 const Camera = () => {
@@ -14,27 +10,30 @@ const Camera = () => {
     output_product_image: string;
     };
 
-  const location = useLocation();
-  const { id, name } = location.state;
-//   console.log(id, name);
-  // Now, you have access to id and name in the Camera component
-  // Use them as needed
-//   console.log("This values are from Camera File");
-//   console.log(id, name);
-    
+    const location = useLocation();
+    const { id, name } = location.state;
     const videoRef = useRef<HTMLVideoElement>(null);
     const photoRef = useRef<HTMLCanvasElement>(null);
     const [hasPhoto, setHasPhoto] = useState(false);
     const [hasNoCamera, setHasNoCamera] = useState(true);
     const [previewImage, setPreviewImage] = useState('');
-    const [docName, setDocName] = useState(null);
+    const [docName, setDocName] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [noofHoles, SetHoles] = useState("");
+    const [prodStatus,setProdStatus]=useState("");
 
-
-    const { data } = useFrappeGetDocList<QualityInspection>('Quality Inspection', {
-        filters: [["name", "=", docName]],
+    const { data, mutate } = useFrappeGetDocList<QualityInspection>('Quality Inspection', {
         fields: ["name", "output_product_image"],
-    });
-
+        filters: [["name", "=", docName]],
+      });
+      useEffect(() => {
+        if (data && data.length > 0) {
+          setPreviewImage(data[0].output_product_image);
+        } else if (!loading) {
+          console.error("Document not found in the response data.");
+        }
+      }, [data, loading]);
+      
     const getVideo = ()=>{
         navigator.mediaDevices.enumerateDevices()
             .then(devices => {
@@ -91,20 +90,17 @@ const Camera = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ image_data: imageData }), // Send image data as JSON
+                body: JSON.stringify({ image_data: imageData,prod_id:id}), // Send image data as JSON
             });
-
             if (response.status === 200) {
+                mutate();
                 const qualitydoc = await response.json();
                 console.log(qualitydoc);
-                setDocName(qualitydoc);
-                // Update: Check if data exists and has length before accessing properties
-                if (data && data.length > 0) {
-                  setPreviewImage(data[0].output_product_image);
-                } else {
-                  console.error("Document not found in the response data.");
-                }
-              }
+                setDocName(qualitydoc.message["docname"]);
+                SetHoles(qualitydoc.message["num_holes"]);
+                setProdStatus(qualitydoc.message["prod_status"])
+                setLoading(false); 
+              } 
             else {
                 console.log(response.status);
             }
@@ -133,8 +129,8 @@ const Camera = () => {
             ):(
                 <>
                 <div className="mx-auto max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
-                    <div className=" mt-14 w-auto h-96  grid gap-6 mb-6 md:grid-cols-2 lg:grid-cols-3">
-                        <div className="w-full border border-black ">
+                    <div className=" mt-14 w-auto h-auto  grid gap-6 mb-6 md:grid-cols-2 lg:grid-cols-3">
+                        <div className="w-full ">
                             <div className="flex items-center justify-center ">
                                 <video ref={videoRef} className="rounded-3xl"></video>
                             </div>
@@ -153,43 +149,56 @@ const Camera = () => {
                         </div>
                         <div className="w-full">
                             <div className={'result' + (hasPhoto ? ' hasPhoto' : '') }>
-                            <canvas ref={photoRef} className="rounded-3xl w-full"></canvas>
+                                <canvas ref={photoRef} className="rounded-3xl w-full"></canvas>
                             </div>
+                            { photoRef?(
                             <div className="flex items-center justify-center mt-9">
-                                <div className="inline-flex justify-center px-4 py-3 text-base font-semibold text-white transition-all duration-200 bg-pink-400 border border-transparent rounded-md items-center hover:bg-pink-600">
-                                    Preview
-                                </div>
+                            <div className="inline-flex justify-center px-4 py-3 text-base font-semibold text-white transition-all duration-200 bg-pink-600 border border-transparent rounded-md items-center ">
+                                Preview
                             </div>
+                            </div>
+                            ): (null)}
                         </div>
-                        <div className="border border-black ">
-                            <div >
-                                 {previewImage.trim() !== "" && (
-                                    <img  src={previewImage} alt="Product Image" />
-                                )}
-                                <div className="flex items-center justify-center mt-9">
-                                    <div className="inline-flex justify-center px-4 py-3 text-base font-semibold text-white transition-all duration-200 bg-pink-400 border border-transparent rounded-md items-center hover:bg-pink-600">
-                                        Output
+                            <div className="">
+                                <div >
+                                    {previewImage.trim() !== "" && (
+                                        <img  src={previewImage} alt="Product Image" className="rounded-3xl" />
+                                    )}
+                                    <div className="flex items-center justify-center mt-9">
+                                        <div className="inline-flex justify-center px-4 py-3 text-base font-semibold text-white transition-all duration-200 bg-pink-600 border border-transparent rounded-md items-center">
+                                            Output
+                                        </div>
+        
                                     </div>
-    
                                 </div>
-                            </div>
                         </div> 
                     </div>
-                    <div className="border border-green-800 w-full">
-                        <div className="grid gap-6 mb-6 md:grid-cols-4">
+                    <div className="border-2 border-pink-800  w-full rounded-3xl">
+                        <div className="grid gap-6 mb-6 grid-cols-3 m-10">
                             <div>
-                                <div>Product ID: {id}</div>
+                                <div className="font-medium text-2xl">
+                                    <span className="text-teal-500">Product ID:  </span><span>{id}</span>
+                                </div>
+                                <div className="font-medium mt-3.5 text-2xl">
+                                    <span className="text-teal-500">Product Name:  </span><span>{name}</span>
+                                </div>
                             </div>
                             <div>
-                                {name}
+                                <span className="font-medium text-2xl text-teal-500">Parameters:</span>
+                                <p>No of Holes:{noofHoles}</p>
                             </div>
-
+                            <div>
+                                { prodStatus=="OK"?<div className="w-3/4 m-auto flex justify-center text-5xl text-white p-8 rounded-2xl font-extrabold bg-green-700">
+                                    OK
+                                </div>: null}
+                                 { prodStatus=="NOT OK"?
+                                <div className="w-3/4 m-auto flex justify-center text-5xl font-extrabold p-8 rounded-2xl text-white bg-red-700">
+                                    NOT OK
+                                </div>:null}
+                            </div>
                         </div>
-
                     </div>
-                    
                 </div>
-                
                 </>
             )}            
         </div>

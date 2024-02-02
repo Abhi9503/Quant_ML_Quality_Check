@@ -166,7 +166,7 @@ export const Product=() =>{
                                 </td>
                             </tr>
                             {clickedRows[index] && expandedRow === index && (
-                                    <div className="absolute bottom-0 right-0 bg-gray-100 border border-black">
+                                    <div className="absolute top-56 right-0 bg-gray-100 border border-black">
                                      <Editproduct productData={d} />
                                     </div>
                                 )}

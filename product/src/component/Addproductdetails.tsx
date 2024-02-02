@@ -1,3 +1,10 @@
+// save this data to the doc type,
+// New product Registration.
+// company, productName, productGroup, status, selectedImage
+// the values are stored in useState
+
+
+
 import Header from "./Header";
 import {useFrappeGetDocList } from "frappe-react-sdk";
 import {ChangeEvent, useState} from "react";
@@ -6,6 +13,16 @@ import "react-toastify/dist/ReactToastify.css";
 
 
 const Addproductdetails = () =>{
+
+    //variables ti store data from form
+    const[productGroup,setProductGroup] = useState("");
+    const[company,setCompany] = useState("");
+    const[productName,setProductName] = useState("");
+    const[status,setStatus] = useState("Active");
+    const [error, setError] = useState<string>('');
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+   
+
     interface ProductGroup{
         name:string,
     }
@@ -14,9 +31,7 @@ const Addproductdetails = () =>{
       });
 
       //for image validation
-    const [error, setError] = useState<string>('');
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+ const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const allowedExtensions = ['.png', '.jpg', '.jpeg'];
         const selectedFile = event.target.files?.[0];
 
@@ -39,11 +54,7 @@ const Addproductdetails = () =>{
             }
         }
     };
-//variables ti store data from form
-    const[productGroup,setProductGroup] = useState("");
-    const[company,setCompany] = useState("");
-    const[productName,setProductName] = useState("");
-    const[status,setStatus] = useState("Active");
+
 
     function showErrorProductGroup(){
         toast.error('Please select the product group', {
@@ -71,6 +82,8 @@ const Addproductdetails = () =>{
           transition: Bounce,
           });
       }
+
+    
     const submit = () =>{
         alert(selectedImage);
         if(productGroup==="" || productGroup==="Select Product Group"){
@@ -127,7 +140,6 @@ const Addproductdetails = () =>{
                                 ))
                             }
                         </select>
-                        {/* {productGroupError && <p className="text-sm text-red-800">{productGroupError}</p>} */}
                     </div>
                     <div>
                         <label className="block mb-2 text-sm font-medium text-gray-900">Product Status</label>

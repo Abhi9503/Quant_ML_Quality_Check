@@ -1,9 +1,5 @@
-// import { useState } from 'react';
-// import reactLogo from './assets/react.svg';
 import { FrappeProvider } from 'frappe-react-sdk';
-// import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-// import { Product } from './pages/product';
 import Home from './component/Home';
 import Checkquality from './component/Checkquality';
 import Camera from './component/Camera';
@@ -17,7 +13,6 @@ function App() {
 	<div className="App">
 	  <FrappeProvider socketPort={import.meta.env.VITE_SOCKET_PORT}>
 			<BrowserRouter basename={import.meta.env.VITE_BASE_PATH ?? ''}>
-				{/* <AuthProvider> */}
 				<ToastContainer position="top-right" autoClose={5000} />
 					<Routes>
 						<Route path='/login' element={<h1>Login</h1>}/>,
@@ -27,8 +22,7 @@ function App() {
 						<Route path='/Addproductdetails' element={<Addproductdetails/>}/>,
 						<Route path='/Uploadproduct' element={<Uploadproduct/>}/>,
 						<Route path='/Loginpage' element={<Loginpage/>}/>
-					</Routes>		
-				{/* </AuthProvider> */}
+					</Routes>
 			</BrowserRouter>
 	  </FrappeProvider>
 	</div>

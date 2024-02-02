@@ -14,13 +14,8 @@ class QualityInspection(Document):
     pass
 
 
-
-
-
-
-
 @frappe.whitelist(allow_guest=True)
-def casting_obj_detection(image_data):
+def casting_obj_detection(image_data,prod_id):
     try:
         filename = 'product_image.png'
         content_type = 'image/png'
@@ -29,7 +24,7 @@ def casting_obj_detection(image_data):
         file_url = file_doc.file_url if file_doc else None
 
         quality_doc = frappe.new_doc("Quality Inspection")
-        quality_doc.product__id = "PCB-38"
+        quality_doc.product__id = prod_id
         quality_doc.product_picture = file_url
         quality_doc.insert()
         quality_doc.save()
@@ -97,11 +92,14 @@ def casting_obj_detection(image_data):
             doc = frappe.get_doc("Quality Inspection", quality_doc.name)
             doc.output_product_image = file_url
             doc.save()
-
-            # with open(annotated_filename, 'rb') as annotated_file:
-            #     image_data_decoded = base64.b64encode(annotated_file.read()).decode('utf-8')
-
-            return doc.name  # or any other indication of success
+            docname=doc.name
+            
+            if(num_holes==16):
+                prod_status="OK"
+            else:
+                prod_status="NOT OK"
+                
+            return {"docname":docname,"num_holes":num_holes,"prod_status":prod_status}   
 
         else:
             return "No predictions found"

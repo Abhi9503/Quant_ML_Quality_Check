@@ -4,7 +4,6 @@ import Header from "./Header";
 import { useFrappeAuth } from "frappe-react-sdk";
 import { useNavigate } from 'react-router-dom';
 
-// import { useNavigate } from 'react-router-dom';
 
 const Loginpage = () => {
   const navigate = useNavigate();
@@ -75,7 +74,7 @@ const Loginpage = () => {
                 <div className="flex flex-wrap justify-between text-sm">
                   <div
                     onClick={() => setShowPassword(!showPassword)}
-                    className="cursor-pointer mt-1 md:m-3 text-teal-800 hover:text-pink-500 font-semibold"
+                    className="cursor-pointer mt-1 md:m-3 text-teal-800 hover:text-teal-500 font-semibold"
                   >
                     {showPassword ? "Hide Password" : "Show Password"}
                   </div>

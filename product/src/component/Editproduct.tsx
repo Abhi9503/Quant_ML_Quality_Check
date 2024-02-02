@@ -1,11 +1,17 @@
-import Header from "./Header";
 import {useFrappeGetDocList } from "frappe-react-sdk";
 import {ChangeEvent, useState} from "react";
 import {Bounce,toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
-const Addproductdetails = () =>{
+interface EditproductProps {
+    company:string,
+    name: string;
+    product_name: string;
+    product_group: string;
+    status: string;
+    image: string;
+  }
+const Editproduct: React.FC<EditproductProps> = ({ productData }) =>{
     interface ProductGroup{
         name:string,
     }
@@ -13,9 +19,9 @@ const Addproductdetails = () =>{
         fields: ["name"]
       });
 
-      //for image validation
+      //for inmage validation
     const [error, setError] = useState<string>('');
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [selectedImage, setSelectedImage] = useState<string | null>(productData.image);
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const allowedExtensions = ['.png', '.jpg', '.jpeg'];
         const selectedFile = event.target.files?.[0];
@@ -40,10 +46,10 @@ const Addproductdetails = () =>{
         }
     };
 //variables ti store data from form
-    const[productGroup,setProductGroup] = useState("");
-    const[company,setCompany] = useState("");
-    const[productName,setProductName] = useState("");
-    const[status,setStatus] = useState("Active");
+    const[productGroup,setProductGroup] = useState(productData.product_group);
+    const[company,setCompany] = useState(productData.company);
+    const[productName,setProductName] = useState(productData.name);
+    const[status,setStatus] = useState(productData.status);
 
     function showErrorProductGroup(){
         toast.error('Please select the product group', {
@@ -87,9 +93,8 @@ const Addproductdetails = () =>{
 
     return(
         <>
-        <Header/>
         <div className=" mx-auto max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
-           <div className="pl-10 mt-8 flex justify-start text-center text-xl font-semibold">Add New Product</div>
+           <div className="pl-10 mt-8 flex justify-start text-center text-xl font-semibold">Edit Product</div>
             
             <form className="p-10" onSubmit={(e) => { e.preventDefault(); submit(); }} >
                 <div className="grid gap-6 mb-6 md:grid-cols-2">
@@ -172,4 +177,4 @@ const Addproductdetails = () =>{
     )
 }
 
-export default Addproductdetails;
+export default Editproduct;

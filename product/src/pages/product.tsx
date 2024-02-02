@@ -1,10 +1,6 @@
-// import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-// import { ProductList } from "../component/ProductList";
 import { useFrappeDocTypeEventListener, useFrappeGetDocList } from "frappe-react-sdk"
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Button, Center, HStack, Heading, Spinner, Stack, Table, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
-// import { useFrappeDocTypeEventListener, useFrappeGetDocList } from "frappe-react-sdk"
-import AddProduct  from "./../component/AddProduct"
+import Editproduct from "../component/Editproduct";
 
 import { Link } from "react-router-dom";
 interface ProductList{
@@ -25,9 +21,7 @@ const searchID = (idSearch: string, productList: ProductList[]) => {
 
 export const Product=() =>{
     
-    const {data, isLoading,error,mutate}= useFrappeGetDocList<ProductList>('Product Information',{fields:["name","product_name","product_group","status","image"]})
-    // const {isOpen,onOpen,onClose}= useDisclosure()  
-    // console.log(data);
+    const {data,mutate}= useFrappeGetDocList<ProductList>('Product Information',{fields:["name","product_name","product_group","status","image"]})
     useFrappeDocTypeEventListener('Product Information', async (d) => {
         if (d.doctype === "Product Information") {
           try {
@@ -51,9 +45,14 @@ export const Product=() =>{
     }, [data]);
 
     const [clickedRows, setClickedRows] = useState<Array<boolean>>([]);
-
+    const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
     const handleButtonClick = (index: number) => {
+        console.log(expandedRow)
+        if (index !== expandedRow){
+            // Close the previously expanded row (if any)
+            setExpandedRow(index);
+          }
         console.log(`Clicked on row ${index + 1}`);
         // Create a copy of the array and toggle the clicked status for the current row
         const updatedClickedRows = [...clickedRows];
@@ -62,6 +61,13 @@ export const Product=() =>{
         // Update the state with the modified array
         setClickedRows(updatedClickedRows);
       };
+
+    //   const handleSubmitName = (event: FormEvent<HTMLFormElement>) => {
+    //     event.preventDefault();
+    //     // Your form submission logic here
+
+    //     console.log("Change Name");
+    //   };
 
     return(
         <div className="mt-5 mx-auto max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl 2xl:max-w-screen-2xl">
@@ -140,48 +146,30 @@ export const Product=() =>{
                                 <th scope="col" className="px-6 py-3">
                                     Status
                                 </th>
-                                <th scope="col" className="px-6 py-3">
-                                    File
-                                </th>
                             </tr>
                         </thead>
                         {newList &&  <tbody>
                             {newList.map((d,index) =>
                             <>
-                            <tr key={d.name} className="bg-white font-medium border-b">
+                            <tr onClick={() => handleButtonClick(index)} key={d.name} className="bg-white font-medium border-b cursor-pointer">
                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                                     {d.name}
                                 </th>
-                                <button onClick={() => handleButtonClick(index)}>
-                      <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                        {d.product_name}
-                      </th>
-                    </button>
-                    {(
-                    // {clickedRows[index] && (
-                      <>
-                        <div className="border border-black w-3/4">
-                            <form>
-                                <input className="mt-3 w-full p-1 px-2" placeholder="Edit name"/>
-                                <button 
-                                    className="mt-3 relative mx-auto text-white bg-pink-500 hover:bg-pink-800 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-lg text-sm px-4 py-2 md:px-2 lg:px-4 lg:py-2 md:end-0 lg:end-2.5"
-                                    type="submit"
-                                >
-                                    Save
-                                </button>
-                          </form>
-                        </div>
-                      </>
-                    )}
+                                <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {d.product_name}
+                                </th>
                                 <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                     {d.product_group}
                                 </td>
                                 <td className="px-6 py-4">
                                     {d.status}
                                 </td>
-                                <td className="px-6 py-4">
-                                </td>
                             </tr>
+                            {clickedRows[index] && expandedRow === index && (
+                                    <div className="absolute bottom-0 right-0 bg-gray-100 border border-black">
+                                     <Editproduct productData={d} />
+                                    </div>
+                                )}
                             </>
                             )}
                         </tbody>}

@@ -16,6 +16,8 @@ export interface ProductInformation{
 	product_group?: string
 	/**	Image : Attach	*/
 	image?: string
+	/**	ML Model : Link - ML Model	*/
+	ml_model?: string
 	/**	Company : Data	*/
 	company?: string
 	/**	Status : Select	*/

@@ -14,7 +14,22 @@ class QualityInspection(Document):
     pass
 
 
+
 @frappe.whitelist(allow_guest=True)
+def object_defect_detection(image_data,prod_id):
+    result=""
+    prod_doc=frappe.get_doc("Product Information",prod_id)
+    if(prod_doc.ml_model):
+        if(prod_doc.ml_model=="Roboflow-Casting"):
+            result=casting_obj_detection(image_data,prod_id)
+
+    return result
+
+
+
+
+
+
 def casting_obj_detection(image_data,prod_id):
     try:
         filename = 'product_image.png'
@@ -107,6 +122,10 @@ def casting_obj_detection(image_data,prod_id):
     except Exception as e:
         frappe.msgprint(f"Error processing request: {str(e)}")
         return {'error': str(e)}
+
+
+
+
 
 
 

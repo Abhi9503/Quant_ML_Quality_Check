@@ -11,6 +11,7 @@
   "product_name",
   "product_group",
   "image",
+  "ml_model",
   "column_break_uygj3",
   "company",
   "status"
@@ -46,11 +47,17 @@
    "fieldname": "image",
    "fieldtype": "Attach",
    "label": "Image"
+  },
+  {
+   "fieldname": "ml_model",
+   "fieldtype": "Link",
+   "label": "ML Model",
+   "options": "ML Model"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-20 15:18:28.108962",
+ "modified": "2024-02-03 12:29:55.055657",
  "modified_by": "Administrator",
  "module": "product_details",
  "name": "Product Information",

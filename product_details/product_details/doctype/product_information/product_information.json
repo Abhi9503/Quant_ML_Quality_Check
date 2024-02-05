@@ -14,7 +14,8 @@
   "ml_model",
   "column_break_uygj3",
   "company",
-  "status"
+  "status",
+  "parameter_analysis"
  ],
  "fields": [
   {
@@ -53,11 +54,17 @@
    "fieldtype": "Link",
    "label": "ML Model",
    "options": "ML Model"
+  },
+  {
+   "fieldname": "parameter_analysis",
+   "fieldtype": "Table",
+   "label": "Parameter Analysis",
+   "options": "PI Parameter Analysis"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-03 12:29:55.055657",
+ "modified": "2024-02-03 14:45:29.654521",
  "modified_by": "Administrator",
  "module": "product_details",
  "name": "Product Information",

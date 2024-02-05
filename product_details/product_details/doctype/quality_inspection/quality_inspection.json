@@ -118,7 +118,7 @@
    "fieldname": "product_status",
    "fieldtype": "Select",
    "label": "Product Status",
-   "options": "Ok\nNot Ok"
+   "options": "OK\nNOT OK"
   },
   {
    "fieldname": "section_break_awzr2",
@@ -132,7 +132,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-31 12:07:17.849726",
+ "modified": "2024-02-03 15:24:39.643907",
  "modified_by": "Administrator",
  "module": "product_details",
  "name": "Quality Inspection",

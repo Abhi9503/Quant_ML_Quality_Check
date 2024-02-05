@@ -1,3 +1,4 @@
+import { PIParameterAnalysis } from './PIParameterAnalysis'
 
 export interface ProductInformation{
 	creation: string
@@ -22,4 +23,6 @@ export interface ProductInformation{
 	company?: string
 	/**	Status : Select	*/
 	status?: "Active" | "In-Active"
+	/**	Parameter Analysis : Table - PI Parameter Analysis	*/
+	parameter_analysis?: PIParameterAnalysis[]
 }

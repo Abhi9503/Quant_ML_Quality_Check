@@ -26,7 +26,7 @@ export interface QualityInspection{
 	/**	Output Product Image : Attach	*/
 	output_product_image?: string
 	/**	Product Status : Select	*/
-	product_status?: "Ok" | "Not Ok"
+	product_status?: "OK" | "NOT OK"
 	/**	Parameter Analysis : Table - QI Parameter Analysis	*/
 	parameter_analysis?: QIParameterAnalysis[]
 	/**	Model Name : Data	*/

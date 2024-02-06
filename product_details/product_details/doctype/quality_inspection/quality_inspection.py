@@ -21,7 +21,7 @@ class QualityInspection(Document):
     pass
 
 
-
+#This function is called when we capture image
 @frappe.whitelist(allow_guest=True)
 def object_defect_detection(image_data,prod_id):
     result=""
@@ -29,8 +29,28 @@ def object_defect_detection(image_data,prod_id):
     if(prod_doc.ml_model):
         if(prod_doc.ml_model=="Roboflow-Casting"):
             result=casting_obj_detection(image_data,prod_id,prod_doc.ml_model)
-
+        elif(prod_doc.ml_model=="Yolo-Electronics"):
+            result=pcb_defect_detection(image_data, prod_id, prod_doc.ml_model)
     return result
+
+
+# from ...pcb.pcbdetect import detect
+
+@frappe.whitelist(allow_guest=True)
+def pcb_defect_detection(image_data, prod_id, model_name):
+    # filename = 'product_image.png'
+    # content_type = 'image/png'
+    # image_data_decoded = base64.b64decode(image_data.split(',')[1])
+    # file_doc = save_file(filename, image_data_decoded, 'Quality Inspection', content_type)
+    # file_url1 = file_doc.file_url if file_doc else None
+
+    # command = "python apps/product_details/product_details/product_details/pcb/yolov5/detect.py --source sites/quality.com/public/files/01_missing_hole_02.jpg --weights apps/product_details/product_details/product_details/pcb/yolov5/runs/train/pcb_1st4/weights/best.pt"
+    # subprocess.run(command, shell=True)
+    
+    
+    
+    return {"docname": "docname", "parameters":"hii", "prod_status": "prod_status"}
+
 
 def casting_obj_detection(image_data, prod_id, model_name):
     try:
@@ -108,17 +128,14 @@ def casting_obj_detection(image_data, prod_id, model_name):
                     points_array = np.array([(int(p['x']), int(p['y'])) for p in points])
                     rect = cv2.boundingRect(points_array)
                     width = rect[2] / pixel_per_cm  # Convert width to cm
-                    height = rect[3] / pixel_per_cm  # Convert height to cm
                     font = cv2.FONT_HERSHEY_SIMPLEX
                     font_scale = 0.5
                     font_thickness = 1
                     text_color = (0, 0, 0) 
 
-                    cv2.putText(original_image, f'W: {width:.2f} cm', (rect[0], rect[1] - 10),
+                    cv2.putText(original_image, f'd: {width:.2f} cm', (rect[0], rect[1] - 10),
                                 font, font_scale, text_color, font_thickness)
-                    cv2.putText(original_image, f'H: {height:.2f} cm', (rect[0], rect[1] - 25),
-                                font, font_scale, text_color, font_thickness)
-
+                   
     
 
             # Save the modified image
@@ -159,145 +176,6 @@ def casting_obj_detection(image_data, prod_id, model_name):
         frappe.msgprint(f"Error processing request: {str(e)}")
         return {'error': str(e)}
     
+
+
     
-    
-# def casting_obj_detection(image_data,prod_id,model_name):
-#     try:
-#         filename = 'product_image.png'
-#         content_type = 'image/png'
-#         image_data_decoded = base64.b64decode(image_data.split(',')[1])
-#         file_doc = save_file(filename, image_data_decoded, 'Quality Inspection', content_type)
-#         file_url1 = file_doc.file_url if file_doc else None
-
-#        # Save the image temporarily
-#         temp_dir = tempfile.gettempdir()
-#         temp_filename = os.path.join(temp_dir, 'temp_image.png')
-#         with open(temp_filename, 'wb') as temp_file:
-#             temp_file.write(image_data_decoded)
-
-#         # Convert the image to RGB (if it's in RGBA mode)
-#         img = Image.open(temp_filename)
-#         if img.mode == 'RGBA':
-#             img = img.convert('RGB')
-#             img.save(temp_filename, format='PNG')
-
-#         # Initialize Roboflow
-#         rf = Roboflow(api_key="tYOmMkYZj1W6AScfD6I2")
-#         project = rf.workspace().project("metal_plate")
-#         model = project.version("1").model
-
-#         # Infer on the local temporary image
-#         prediction_response = model.predict(temp_filename, confidence=40).json()
-
-#         # Get the predictions from the response
-#         predictions = prediction_response.get('predictions', [])
-        
-        
-#         # Check if predictions are present
-#        # Check if predictions are present
-#         if predictions:
-#             # Load the original image
-#             original_image = cv2.imread(temp_filename)
-
-#             # Initialize a counter for the number of holes
-#             num_holes = 0
-
-#             # Iterate through predictions to find holes
-#             for prediction in predictions:
-#                 points = prediction.get('points', [])
-
-#                 # Check if there are enough points to form a hole (at least 3 points)
-#                 if len(points) >= 3:
-#                     # Increment the counter for each hole found
-#                     num_holes += 1
-
-#                     # Optionally, draw a bounding box around the hole for visualization
-#                     rect = cv2.boundingRect(np.array([(int(p['x']), int(p['y'])) for p in points]))
-#                     cv2.rectangle(original_image, (rect[0], rect[1]), (rect[0] + rect[2], rect[1] + rect[3]), (0, 255, 0), 2)
-                    
-#             # Save the modified image
-#             annotated_filename = os.path.join(temp_dir, 'annotated_image.png')
-#             cv2.imwrite(annotated_filename, original_image)
-
-
-
-
-
-
-
-#             filename = 'annotated_image.png'
-#             content_type = 'image/png'
-#             with open(annotated_filename, 'rb') as annotated_file:
-#                 image_data_decoded = annotated_file.read()
-
-#             file_doc = save_file(filename, image_data_decoded, 'Quality Inspection', content_type)
-#             file_url2 = file_doc.file_url if file_doc else None
-
-#             quality_doc = frappe.new_doc("Quality Inspection")
-#             quality_doc.product__id = prod_id
-#             quality_doc.product_picture = file_url1
-#             quality_doc.output_product_image = file_url2
-            
-#             prod_status=""
-#             if(num_holes==16):
-#                 prod_status="OK"
-#             else:
-#                 prod_status="NOT OK"
-                
-#             quality_doc.product_status=prod_status
-#             quality_doc.model_name=model_name
-#             quality_doc.save()
-            
-#             docname=quality_doc.name
-            
-#             parameters={
-#                 "No of Holes":num_holes,
-#             }
-            
-#             return {"docname":docname,"parameters":parameters,"prod_status":prod_status}   
-
-#         else:
-#             return "No predictions found"
-
-#     except Exception as e:
-#         frappe.msgprint(f"Error processing request: {str(e)}")
-#         return {'error': str(e)}
-
-
-
-
-
-
-
-@frappe.whitelist(allow_guest=True)
-def pcb_defect_detection(image_data):
-    try:
-        # Clone the YOLOv5 repository
-        subprocess.run(["git", "clone", "https://github.com/ultralytics/yolov5.git"])
-
-        # Rest of your code here
-
-        return "Success"
-
-    except Exception as e:
-        return {'error': str(e)}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

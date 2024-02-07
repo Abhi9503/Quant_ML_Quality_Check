@@ -38,19 +38,58 @@ def object_defect_detection(image_data,prod_id):
 
 @frappe.whitelist(allow_guest=True)
 def pcb_defect_detection(image_data, prod_id, model_name):
-    # filename = 'product_image.png'
-    # content_type = 'image/png'
-    # image_data_decoded = base64.b64decode(image_data.split(',')[1])
-    # file_doc = save_file(filename, image_data_decoded, 'Quality Inspection', content_type)
-    # file_url1 = file_doc.file_url if file_doc else None
+    try:
+        filename = 'product_image.png'
+        content_type = 'image/png'
+        image_data_decoded = base64.b64decode(image_data.split(',')[1])
+        file_doc = save_file(filename, image_data_decoded, 'Quality Inspection', content_type)
+        file_url1 = file_doc.file_url if file_doc else None
+       
+        parent_folder_path="/home/poseidon/Quality-Inspection/apps/product_details/product_details/product_details/pcb/yolov5/runs/detect"
+        command =f"python /home/poseidon/Quality-Inspection/apps/product_details/product_details/product_details/pcb/yolov5/detect.py --source /home/poseidon/Quality-Inspection/sites/quality.com/public{file_url1} --weights /home/poseidon/Quality-Inspection/apps/product_details/product_details/product_details/pcb/yolov5/runs/train/pcb_1st4/weights/best.pt"
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        if result.returncode == 0:
+            last_subdirectory = None
+            image_path = None
+            subdirectories = [os.path.join(parent_folder_path, d) for d in os.listdir(parent_folder_path) if os.path.isdir(os.path.join(parent_folder_path, d))]
+            if subdirectories:
+                last_subdirectory = max(subdirectories, key=os.path.getmtime)
+                files_in_last_subdirectory = os.listdir(last_subdirectory)
+                image_files = [file for file in files_in_last_subdirectory if file.endswith((".jpg", ".jpeg", ".png"))]
+                if len(image_files) == 1:
+                    image_path = os.path.join(last_subdirectory, image_files[0])
+            
+            filename = 'annotated_image.png'
+            content_type = 'image/png'
+            with open(image_path, 'rb') as annotated_file:
+                image_data_decoded = annotated_file.read()
 
-    # command = "python apps/product_details/product_details/product_details/pcb/yolov5/detect.py --source sites/quality.com/public/files/01_missing_hole_02.jpg --weights apps/product_details/product_details/product_details/pcb/yolov5/runs/train/pcb_1st4/weights/best.pt"
-    # subprocess.run(command, shell=True)
-    
-    
-    
-    return {"docname": "docname", "parameters":"hii", "prod_status": "prod_status"}
+            file_doc = save_file(filename, image_data_decoded, 'Quality Inspection', content_type)
+            file_url2 = file_doc.file_url if file_doc else None
 
+            
+
+            quality_doc = frappe.new_doc("Quality Inspection")
+            quality_doc.product__id = prod_id
+            quality_doc.product_picture = file_url1
+            quality_doc.output_product_image = file_url2
+            num_holes=0
+            prod_status = "OK" if num_holes == 16 else "NOT OK"
+
+            quality_doc.product_status = prod_status
+            quality_doc.model_name = model_name
+            quality_doc.save()
+
+            docname = quality_doc.name
+
+            parameters = {
+                "No of Holes": num_holes,
+            }
+
+            return {"docname": docname, "parameters": parameters, "prod_status": prod_status}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+   
 
 def casting_obj_detection(image_data, prod_id, model_name):
     try:

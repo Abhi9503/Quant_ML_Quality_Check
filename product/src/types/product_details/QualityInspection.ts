@@ -35,4 +35,6 @@ export interface QualityInspection{
 	computation_time?: string
 	/**	Accuracy : Float	*/
 	accuracy?: number
+	/**	Test : Attach	*/
+	test?: string
 }

@@ -13,6 +13,7 @@ from scipy.spatial.distance import euclidean
 from imutils import perspective
 from imutils import contours
 import imutils
+import re
 
 
 
@@ -39,15 +40,37 @@ def object_defect_detection(image_data,prod_id):
 @frappe.whitelist(allow_guest=True)
 def pcb_defect_detection(image_data, prod_id, model_name):
     try:
-        filename = 'product_image.png'
+        filename = 'product.png'
         content_type = 'image/png'
         image_data_decoded = base64.b64decode(image_data.split(',')[1])
         file_doc = save_file(filename, image_data_decoded, 'Quality Inspection', content_type)
         file_url1 = file_doc.file_url if file_doc else None
-       
+
         parent_folder_path="/home/poseidon/Quality-Inspection/apps/product_details/product_details/product_details/pcb/yolov5/runs/detect"
         command =f"python /home/poseidon/Quality-Inspection/apps/product_details/product_details/product_details/pcb/yolov5/detect.py --source /home/poseidon/Quality-Inspection/sites/quality.com/public{file_url1} --weights /home/poseidon/Quality-Inspection/apps/product_details/product_details/product_details/pcb/yolov5/runs/train/pcb_1st4/weights/best.pt"
+    
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        stderr_output = result.stderr
+        instances_to_count = ["missing_holes", "mousse_bit", "open_circuit", "short", "spur", "spurious_copper"]
+
+        counts = {}
+        for instance in instances_to_count:
+            pattern = rf'(\d+) {instance}'
+            matches = re.findall(pattern, stderr_output)
+            if(instance=="missing_holes"):
+                instance="Missing Holes"
+            elif(instance=="mousse_bit"):
+                instance="Mouce Bite"
+            elif(instance=="open_circuit"):
+                instance="Open Circuit"
+            elif(instance=="short"):
+                instance="Short"
+            elif(instance=="spur"):
+                instance="Spur"
+            elif(instance=="spurious_copper"):
+                instance="Spurious Copper"
+            counts[instance] = int(matches[0]) if matches else 0
+            
         if result.returncode == 0:
             last_subdirectory = None
             image_path = None
@@ -66,30 +89,35 @@ def pcb_defect_detection(image_data, prod_id, model_name):
 
             file_doc = save_file(filename, image_data_decoded, 'Quality Inspection', content_type)
             file_url2 = file_doc.file_url if file_doc else None
-
-            
-
+                
             quality_doc = frappe.new_doc("Quality Inspection")
             quality_doc.product__id = prod_id
             quality_doc.product_picture = file_url1
             quality_doc.output_product_image = file_url2
             num_holes=0
-            prod_status = "OK" if num_holes == 16 else "NOT OK"
-
+           
+            
+            defetc_count=0
+            for i in counts:
+                if(counts[i]!=0):
+                    defetc_count+=1
+            
+            prod_status = "OK" if defetc_count == 0 else "NOT OK"
+            
             quality_doc.product_status = prod_status
             quality_doc.model_name = model_name
             quality_doc.save()
 
             docname = quality_doc.name
 
-            parameters = {
-                "No of Holes": num_holes,
-            }
-
-            return {"docname": docname, "parameters": parameters, "prod_status": prod_status}
+            return {"docname":docname, "parameters": counts, "prod_status":prod_status}
+            
     except Exception as e:
         return {"success": False, "error": str(e)}
    
+
+
+
 
 def casting_obj_detection(image_data, prod_id, model_name):
     try:
@@ -112,10 +140,10 @@ def casting_obj_detection(image_data, prod_id, model_name):
             img.save(temp_filename, format='PNG')
 
         # Initialize Roboflow
-        rf = Roboflow(api_key="tYOmMkYZj1W6AScfD6I2")
-        project = rf.workspace().project("metal_plate")
-        model = project.version("1").model
-
+        rf = Roboflow(api_key="mFFLmIzFV3HfD6CZcAcA")
+        project = rf.workspace().project("casting-usyaw")
+        model = project.version("2").model
+         
         # Infer on the local temporary image
         prediction_response = model.predict(temp_filename, confidence=40).json()
 

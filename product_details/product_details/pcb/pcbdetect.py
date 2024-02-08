@@ -14,4 +14,3 @@ def detect(parent_folder_path):
         image_files = [file for file in files_in_last_subdirectory if file.endswith((".jpg", ".jpeg", ".png"))]
         if len(image_files) == 1:
             image_path = os.path.join(last_subdirectory, image_files[0])
-    return command

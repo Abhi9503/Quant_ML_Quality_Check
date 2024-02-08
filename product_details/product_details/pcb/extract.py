@@ -1,14 +1,13 @@
-import easyocr
+import pytesseract
+from PIL import Image
 
-# Initialize the EasyOCR reader
-reader = easyocr.Reader(['en'])  # Change 'en' to the language of your choice
+pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 
-# Path to the image file
-image_path = "apps/product_details/product_details/product_details/pcb/img.jpeg"
+# Open the image file
+image = Image.open('/home/poseidon/Quality-Inspection/apps/product_details/product_details/product_details/pcb/img.jpeg')
 
-# Read the text from the image
-result = reader.readtext(image_path)
+# Use pytesseract to do OCR on the image
+text = pytesseract.image_to_string(image)
 
 # Print the extracted text
-for detection in result:
-    print(detection[1])  # Extracted text
+print(text)

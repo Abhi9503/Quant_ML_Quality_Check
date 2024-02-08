@@ -262,7 +262,7 @@ const Camera = () => {
                                             src={previewImage}
                                             alt="Product Image"
                                             className="rounded-3xl "
-                                            style={{ maxHeight: '400px', marginTop: '80px', marginLeft:"60px"}} // Set the same maxHeight as the selected image
+                                            style={{ maxHeight: '400px', marginTop: '90px', marginLeft:"10px"}} // Set the same maxHeight as the selected image
                                         />
                                         )
                                     ) : (

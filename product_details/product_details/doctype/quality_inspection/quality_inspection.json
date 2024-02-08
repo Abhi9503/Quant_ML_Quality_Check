@@ -26,7 +26,8 @@
   "column_break_kxpyo",
   "computation_time",
   "column_break_yti8i",
-  "accuracy"
+  "accuracy",
+  "test"
  ],
  "fields": [
   {
@@ -128,11 +129,16 @@
    "fieldname": "output_product_image",
    "fieldtype": "Attach",
    "label": "Output Product Image"
+  },
+  {
+   "fieldname": "test",
+   "fieldtype": "Attach",
+   "label": "Test"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-03 15:24:39.643907",
+ "modified": "2024-02-07 17:57:28.451406",
  "modified_by": "Administrator",
  "module": "product_details",
  "name": "Quality Inspection",
